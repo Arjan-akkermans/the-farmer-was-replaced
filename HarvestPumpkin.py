@@ -1,31 +1,44 @@
-clear()
+
 import Utils
 count = 0
-while count < get_world_size() * get_world_size():	
-	count+=1
-	till()
-	plant(Entities.Pumpkin)
-	Utils.move_next_tile()
+# dictionary to boolean indicating if the pumpkin at position has grown
+isGrown = {}
 
 def harvest_all():
 	harvest()
 	for i in range(get_world_size() * get_world_size()): 	
 		plant(Entities.Pumpkin)
+		isGrown[i,j] = False 
 		Utils.move_next_tile()
+WORLD_SIZE=get_world_size()
 
+# initi data and all pumpkins
+for i in range(WORLD_SIZE):
+		for j in range(WORLD_SIZE):
+			Utils.move_to(i,j)
+			entity = get_entity_type()
+			if(  entity != Entities.Pumpkin):
+				if(get_ground_type() != Grounds.Soil):
+					till()
+				if entity != None:
+					harvest()
+				plant(Entities.Pumpkin)
+			isGrown[i,j] = False
 
-
-grownPumpkins = 0
-TOTAL_SQUARES = get_world_size() * get_world_size()
 while True:
-	for i in range( TOTAL_SQUARES): 
-		if( can_harvest() ):
-			grownPumpkins +=1
-		else:
-			plant(Entities.Pumpkin)
-		Utils.move_next_tile()
-	if grownPumpkins >= TOTAL_SQUARES:
+	allGrown = True
+	for i in range(WORLD_SIZE):
+		for j in range(WORLD_SIZE):
+			if isGrown[i,j]:
+				continue
+			allGrown = False
+			Utils.move_to(i, j)
+			entity = get_entity_type()
+			if entity != Entities.Pumpkin:
+				plant(Entities.Pumpkin )
+			elif can_harvest():
+				isGrown[i,j] = True
+	if allGrown:
 		harvest_all()
-	grownPumpkins = 0
 
 

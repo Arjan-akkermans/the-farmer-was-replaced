@@ -33,7 +33,6 @@ def move_to(x, y):
 				move(West)
 
 	# Y axis (North/South, wrapping)
-	currentY = get_pos_y()  # refresh after X moves
 	if currentY != y:
 		north_steps = (y - currentY) % worldSize
 		south_steps = (currentY - y) % worldSize
@@ -43,3 +42,26 @@ def move_to(x, y):
 		else:
 			for _ in range(south_steps):
 				move(South)
+
+def move_to_respect_boundries(x, y):
+	worldSize = get_world_size()
+	if worldSize <= 1:
+		return  # nothing to do
+
+	currentX = get_pos_x()
+	currentY = get_pos_y()
+
+	# X axis (East/West, wrapping)
+	if currentX > x:
+		for _ in range( currentX- x):
+			move(West)
+	else:
+		for _ in range( x - currentX):
+			move(East)
+		# X axis (East/West, wrapping)
+	if currentY > y:
+		for _ in range( currentY- y):
+			move(South)
+	else:
+		for _ in range( y - currentY):
+			move(North)
