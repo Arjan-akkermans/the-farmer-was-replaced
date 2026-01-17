@@ -1,17 +1,23 @@
 # Moves to a next file in the grid
 # Will traverse all tiles in a zig-zag pattern
 
-def move_next_tile():
-	WORLD_SIZE = get_world_size() 
+def move_next_tile(xmin = 0, ymin = 0,xmax = get_world_size()-1,ymax=get_world_size()-1): 
 	direction = South
-	end_y = 0
-	if get_pos_x() % 2 == 0: 
+	end_y = ymin
+	positionX = get_pos_x()
+	positionY = get_pos_y()  
+	if positionX % 2 == 0: 
 		direction = North
-		end_y = WORLD_SIZE -1
-	if get_pos_y() != end_y:
-		move(direction)
+		end_y = ymax
+	if positionY != end_y:
+		return move(direction)
 	else:
-		move( East )
+		xTarget = positionX + 1
+		if xTarget > xmax:
+			xTarget = xmin
+		move_to(xTarget,positionY)
+		
+
 		
 def move_to(x, y):
 	worldSize = get_world_size()
@@ -65,3 +71,11 @@ def move_to_respect_boundries(x, y):
 	else:
 		for _ in range( y - currentY):
 			move(North)
+
+def numberToCoordinates(number, size):
+	x = number % size
+	y = number // size
+	return (x, y)
+
+def coordinatesToNumber(x, y, size):
+	return y * size + x
